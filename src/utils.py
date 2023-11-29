@@ -200,7 +200,7 @@ class Utils:
 
     def getRemainingSearches(self):
         dashboard = self.getDashboardData()
-        searchPoints = 1
+        searchPoints = 3
         counters = dashboard["userStatus"]["counters"]
 
         if "pcSearch" not in counters:
@@ -220,7 +220,7 @@ class Utils:
             searchPoints = 3
         elif targetDesktop == 55 or targetDesktop >= 170:
             # Level 1 or 2 US
-            searchPoints = 5
+            searchPoints = 3
         remainingDesktop = int((targetDesktop - progressDesktop) / searchPoints)
         remainingMobile = 0
         if dashboard["userStatus"]["levelInfo"]["activeLevel"] != "Level1":

@@ -4,8 +4,7 @@ import logging
 import logging.handlers as handlers
 import random
 import sys
-import atexit
-import psutil
+import os
 from pathlib import Path
 
 from src import Browser, DailySet, Login, MorePromotions, PunchCards, Searches
@@ -21,8 +20,8 @@ def main():
     args = argumentParser()
     notifier = Notifier(args)
     loadedAccounts = setupAccounts()
-    atexit.register(cleanupChromeProcesses)
     for currentAccount in loadedAccounts:
+        cleanupChromeProcesses()
         try:
             executeBot(currentAccount, notifier, args)
         except Exception as e:
@@ -30,13 +29,8 @@ def main():
 
 
 def cleanupChromeProcesses():
-    # Use psutil to find and terminate Chrome processes
-    for process in psutil.process_iter(['pid', 'name']):
-        if process.info['name'] == 'chrome.exe':
-            try:
-                psutil.Process(process.info['pid']).terminate()
-            except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
-                pass
+    os.system("taskkill /im chrome.exe /t /f")
+    os.system("taskkill /im msedge.exe /t /f")
 
 
 def setupLogging():
