@@ -1,5 +1,6 @@
-requests
-selenium
-ipapi
+requests~=2.31.0
+selenium~=4.15.2
+ipapi~=1.0.4
 undetected-chromedriver
 selenium-wire
+psutil~=5.9.6

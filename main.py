@@ -4,6 +4,8 @@ import logging
 import logging.handlers as handlers
 import random
 import sys
+import atexit
+import psutil
 from pathlib import Path
 
 from src import Browser, DailySet, Login, MorePromotions, PunchCards, Searches
@@ -19,11 +21,22 @@ def main():
     args = argumentParser()
     notifier = Notifier(args)
     loadedAccounts = setupAccounts()
+    atexit.register(cleanupChromeProcesses)
     for currentAccount in loadedAccounts:
         try:
             executeBot(currentAccount, notifier, args)
         except Exception as e:
             logging.exception(f"{e.__class__.__name__}: {e}")
+
+
+def cleanupChromeProcesses():
+    # Use psutil to find and terminate Chrome processes
+    for process in psutil.process_iter(['pid', 'name']):
+        if process.info['name'] == 'chrome.exe':
+            try:
+                psutil.Process(process.info['pid']).terminate()
+            except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+                pass
 
 
 def setupLogging():
@@ -145,7 +158,7 @@ def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace):
         if remainingSearchesM != 0:
             desktopBrowser.closeBrowser()
             with Browser(
-                mobile=True, account=currentAccount, args=args
+                    mobile=True, account=currentAccount, args=args
             ) as mobileBrowser:
                 accountPointsCounter = Login(mobileBrowser).login()
                 accountPointsCounter = Searches(mobileBrowser).bingSearches(
