@@ -181,3 +181,10 @@ pyrightconfig.json
 accounts.json
 sessions
 logs
+.idea/discord.xml
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/vcs.xml
+.idea/modules.xml
+.idea/misc.xml
+.idea/Microsoft-Rewards-Farmer.iml
+.idea/inspectionProfiles/Project_Default.xml

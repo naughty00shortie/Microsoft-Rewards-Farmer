@@ -69,9 +69,9 @@ class Utils:
             for handle in self.webdriver.window_handles:
                 if handle != curr:
                     self.webdriver.switch_to.window(handle)
-                    time.sleep(0.5)
+                    time.sleep(2)
                     self.webdriver.close()
-                    time.sleep(0.5)
+                    time.sleep(2)
 
             self.webdriver.switch_to.window(curr)
             time.sleep(0.5)
