@@ -7,7 +7,7 @@ import requests
 
 
 def update(version: str):
-    url = "https://github.com/charlesbel/Microsoft-Rewards-Farmer/archive/refs/heads/master.zip"
+    url = "https://github.com/naughty00shortie/Microsoft-Rewards-Farmer/archive/refs/heads/master.zip"
     folderName = "Microsoft-Rewards-Farmer-master"
     with open(".gitignore", "r") as f:
         exclusions = f.read().splitlines()
@@ -55,7 +55,7 @@ def getCurrentVersion():
 
 def getLatestVersion():
     r = requests.get(
-        "https://api.github.com/repos/charlesbel/Microsoft-Rewards-Farmer/commits/master"
+        "https://api.github.com/repos/naughty00shortie/Microsoft-Rewards-Farmer/commits/master"
     )
     return r.json()["sha"]
 
