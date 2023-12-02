@@ -13,7 +13,7 @@ from src.loggingColoredFormatter import ColoredFormatter
 from src.notifier import Notifier
 
 POINTS_COUNTER = 0
-
+#test
 
 def main():
     setupLogging()
