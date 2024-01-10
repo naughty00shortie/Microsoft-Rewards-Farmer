@@ -2,7 +2,7 @@ import json
 import logging
 import random
 import time
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 
 import requests
 from selenium.common.exceptions import TimeoutException
@@ -69,6 +69,9 @@ class Searches:
                 pointsCounter = points
             else:
                 break
+            if i >= 3:
+                self.browser.isFinished = False
+                return pointsCounter
         logging.info(
             f"[BING] Finished {self.browser.browserType.capitalize()} Edge Bing searches !"
         )

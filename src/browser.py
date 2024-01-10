@@ -24,6 +24,7 @@ class Browser:
         self.password = account["password"]
         self.localeLang, self.localeGeo = self.getCCodeLang(args.lang, args.geo)
         self.proxy = None
+        self.isFinished = True
         if args.proxy:
             self.proxy = args.proxy
         elif account.get("proxy"):
