@@ -5,8 +5,6 @@ import logging.handlers as handlers
 import random
 import sys
 import os
-import datetime
-import time
 from pathlib import Path
 
 from src import Browser, DailySet, Login, MorePromotions, PunchCards, Searches
@@ -16,26 +14,17 @@ from src.notifier import Notifier
 
 POINTS_COUNTER = 0
 
-
 def main():
-    isFinished = False
     setupLogging()
     args = argumentParser()
     notifier = Notifier(args)
     loadedAccounts = setupAccounts()
-    while not isFinished:
-        now = datetime.datetime.now()
-
-        isFinished = True
-        for currentAccount in loadedAccounts:
-            cleanupChromeProcesses()
-            try:
-                executeBot(currentAccount, notifier, args)
-            except Exception as e:
-                logging.exception(f"{e.__class__.__name__}: {e}")
-    seconds_until_next_quarter_hour = (15 * 60 - (now.minute * 60 + now.second)) % (15 * 60)
-    logging.info(f"Sleeping for {seconds_until_next_quarter_hour} seconds")
-    time.sleep(seconds_until_next_quarter_hour)
+    for currentAccount in loadedAccounts:
+        cleanupChromeProcesses()
+        try:
+            executeBot(currentAccount, notifier, args)
+        except Exception as e:
+            logging.exception(f"{e.__class__.__name__}: {e}")
 
 
 def cleanupChromeProcesses():
