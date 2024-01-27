@@ -16,7 +16,12 @@ class Login:
 
     def login(self):
         logging.info("[LOGIN] " + "Logging-in...")
-        self.webdriver.get("https://login.live.com/")
+        try:
+            self.webdriver.get("https://login.live.com/")
+            logging.info("[LOGIN] " + "Navigated to login page.")
+        except Exception as e:
+            logging.error("[LOGIN] " + "Failed to navigate to login page: " + str(e))
+            return
         alreadyLoggedIn = False
         while True:
             try:
