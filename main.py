@@ -5,6 +5,7 @@ import logging.handlers as handlers
 import random
 import sys
 import os
+import time
 from pathlib import Path
 
 from src import Browser, DailySet, Login, MorePromotions, PunchCards, Searches
@@ -30,6 +31,7 @@ def main():
 def cleanupChromeProcesses():
     os.system("taskkill /im chrome.exe /t /f")
     os.system("taskkill /im msedge.exe /t /f")
+    time.sleep(10)
 
 
 def setupLogging():
