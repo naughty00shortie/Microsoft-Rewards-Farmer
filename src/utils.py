@@ -6,6 +6,7 @@ import urllib.parse
 from pathlib import Path
 
 import requests
+from selenium.common import NoSuchWindowException
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
@@ -67,11 +68,14 @@ class Utils:
             curr = self.webdriver.current_window_handle
 
             for handle in self.webdriver.window_handles:
-                if handle != curr:
-                    self.webdriver.switch_to.window(handle)
-                    time.sleep(2)
-                    self.webdriver.close()
-                    time.sleep(2)
+                try:
+                    if handle != curr:
+                        self.webdriver.switch_to.window(handle)
+                        time.sleep(2)
+                        self.webdriver.close()
+                        time.sleep(2)
+                except NoSuchWindowException:
+                    continue
 
             self.webdriver.switch_to.window(curr)
             time.sleep(0.5)
