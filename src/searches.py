@@ -12,9 +12,10 @@ from src.browser import Browser
 
 
 class Searches:
-    def __init__(self, browser: Browser):
+    def __init__(self, browser: Browser, isFinished: bool):
         self.browser = browser
         self.webdriver = browser.webdriver
+        self.isFinished = isFinished
 
     def getGoogleTrends(self, wordsCount: int) -> list:
         searchTerms: list[str] = []
@@ -70,8 +71,8 @@ class Searches:
             else:
                 break
             if i >= 3:
-                self.browser.isFinished = False
-                return pointsCounter
+                self.isFinished = False
+                return pointsCounter, self.isFinished
         logging.info(
             f"[BING] Finished {self.browser.browserType.capitalize()} Edge Bing searches !"
         )

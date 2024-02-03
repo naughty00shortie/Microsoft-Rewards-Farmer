@@ -30,7 +30,7 @@ def main():
         for currentAccount in loadedAccounts:
             cleanupChromeProcesses()
             try:
-                executeBot(currentAccount, notifier, args)
+                executeBot(currentAccount, notifier, args, isFinished)
             except Exception as e:
                 logging.exception(f"{e.__class__.__name__}: {e}")
     seconds_until_next_quarter_hour = (15 * 60 - (now.minute * 60 + now.second)) % (15 * 60)
@@ -138,7 +138,7 @@ def setupAccounts() -> dict:
     return loadedAccounts
 
 
-def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace):
+def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace, isFinished: bool):
     logging.info(
         f'********************{currentAccount.get("username", "")}********************'
     )
@@ -156,7 +156,7 @@ def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace):
             remainingSearchesM,
         ) = desktopBrowser.utils.getRemainingSearches()
         if remainingSearches != 0:
-            accountPointsCounter = Searches(desktopBrowser).bingSearches(
+            accountPointsCounter, isFinished = Searches(desktopBrowser, isFinished).bingSearches(
                 remainingSearches
             )
 
@@ -166,7 +166,7 @@ def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace):
                     mobile=True, account=currentAccount, args=args
             ) as mobileBrowser:
                 accountPointsCounter = Login(mobileBrowser).login()
-                accountPointsCounter = Searches(mobileBrowser).bingSearches(
+                accountPointsCounter, isFinished = Searches(mobileBrowser, isFinished).bingSearches(
                     remainingSearchesM
                 )
 
