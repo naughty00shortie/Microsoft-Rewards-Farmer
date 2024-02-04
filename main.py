@@ -16,7 +16,6 @@ from src.notifier import Notifier
 
 POINTS_COUNTER = 0
 
-
 def main():
     isFinished = False
     setupLogging()
@@ -30,7 +29,7 @@ def main():
         for currentAccount in loadedAccounts:
             cleanupChromeProcesses()
             try:
-                executeBot(currentAccount, notifier, args, isFinished)
+                isFinished = executeBot(currentAccount, notifier, args, isFinished)
             except Exception as e:
                 logging.exception(f"{e.__class__.__name__}: {e}")
     seconds_until_next_quarter_hour = (15 * 60 - (now.minute * 60 + now.second)) % (15 * 60)
@@ -138,7 +137,7 @@ def setupAccounts() -> dict:
     return loadedAccounts
 
 
-def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace, isFinished: bool):
+def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace, isFinishedCheck: bool):
     logging.info(
         f'********************{currentAccount.get("username", "")}********************'
     )
@@ -156,7 +155,7 @@ def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace, isF
             remainingSearchesM,
         ) = desktopBrowser.utils.getRemainingSearches()
         if remainingSearches != 0:
-            accountPointsCounter, isFinished = Searches(desktopBrowser, isFinished).bingSearches(
+            accountPointsCounter, localIsFinished = Searches(desktopBrowser, isFinishedCheck).bingSearches(
                 remainingSearches
             )
 
@@ -166,7 +165,7 @@ def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace, isF
                     mobile=True, account=currentAccount, args=args
             ) as mobileBrowser:
                 accountPointsCounter = Login(mobileBrowser).login()
-                accountPointsCounter, isFinished = Searches(mobileBrowser, isFinished).bingSearches(
+                accountPointsCounter, localIsFinished = Searches(mobileBrowser, isFinishedCheck).bingSearches(
                     remainingSearchesM
                 )
 
@@ -188,6 +187,7 @@ def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace, isF
                 ]
             )
         )
+        return localIsFinished
 
 
 if __name__ == "__main__":
