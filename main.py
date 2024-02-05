@@ -33,7 +33,7 @@ def main():
                 isFinished = executeBot(currentAccount, notifier, args, isFinished)
             except Exception as e:
                 logging.exception(f"{e.__class__.__name__}: {e}")
-        if(not isFinished):
+        if not isFinished:
             seconds_until_next_quarter_hour = (15 * 60 - (now.minute * 60 + now.second)) % (15 * 60)
             logging.info(f"Sleeping for {seconds_until_next_quarter_hour} seconds")
             time.sleep(seconds_until_next_quarter_hour)
