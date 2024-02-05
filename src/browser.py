@@ -8,6 +8,7 @@ from typing import Any
 import ipapi
 import seleniumwire.undetected_chromedriver as webdriver
 from selenium.webdriver.chrome.webdriver import WebDriver
+from selenium.webdriver.common.keys import Keys
 
 from src.userAgentGenerator import GenerateUserAgent
 from src.utils import Utils
@@ -43,6 +44,12 @@ class Browser:
 
     def __enter__(self) -> "Browser":
         return self
+
+    def clear_cache(self):
+        self.webdriver.execute_script("window.localStorage.clear();")
+        self.webdriver.execute_script("window.sessionStorage.clear();")
+        self.webdriver.get('chrome://settings/clearBrowserData') # for chrome
+        self.webdriver.find_element_by_xpath('//settings-ui').send_keys(Keys.ENTER)
 
     def __exit__(self, *args: Any) -> None:
         self.closeBrowser()

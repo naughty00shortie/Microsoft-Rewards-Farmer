@@ -142,6 +142,7 @@ def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace, isF
         f'********************{currentAccount.get("username", "")}********************'
     )
     with Browser(mobile=False, account=currentAccount, args=args) as desktopBrowser:
+        desktopBrowser.clear_cache()
         accountPointsCounter = Login(desktopBrowser).login()
         startingPoints = accountPointsCounter
         logging.info(
@@ -164,6 +165,7 @@ def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace, isF
             with Browser(
                     mobile=True, account=currentAccount, args=args
             ) as mobileBrowser:
+                mobileBrowser.clear_cache()
                 accountPointsCounter = Login(mobileBrowser).login()
                 accountPointsCounter, localIsFinished = Searches(mobileBrowser, isFinishedCheck).bingSearches(
                     remainingSearchesM
