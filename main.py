@@ -27,7 +27,7 @@ def main():
         isFinished = True
         for currentAccount in loadedAccounts:
             try:
-                #clearCache.clear_cache_for_account(currentAccount, args)
+                clearCache.clear_cache_for_account(currentAccount, args)
                 isFinished = executeBot(currentAccount, notifier, args, isFinished)
             except Exception as e:
                 logging.exception(f"{e.__class__.__name__}: {e}")
@@ -35,7 +35,10 @@ def main():
     logging.info(f"Sleeping for {seconds_until_next_quarter_hour} seconds")
     time.sleep(seconds_until_next_quarter_hour)
 
-
+def cleanupChromeProcesses():
+    os.system("taskkill /im chrome.exe /t /f")
+    os.system("taskkill /im msedge.exe /t /f")
+    time.sleep(1)
 
 
 def setupLogging():
