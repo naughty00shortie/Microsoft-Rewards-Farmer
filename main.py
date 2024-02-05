@@ -6,6 +6,7 @@ import random
 import sys
 import time
 import datetime
+import os
 from pathlib import Path
 
 from src import Browser, DailySet, Login, MorePromotions, PunchCards, Searches, clearCache
