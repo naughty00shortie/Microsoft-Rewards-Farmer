@@ -28,6 +28,7 @@ def main():
         isFinished = True
         for currentAccount in loadedAccounts:
             cleanupChromeProcesses()
+            clearCache.clear_cache_for_account(currentAccount, args)
             try:
                 isFinished = executeBot(currentAccount, notifier, args, isFinished)
             except Exception as e:

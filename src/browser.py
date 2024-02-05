@@ -46,10 +46,15 @@ class Browser:
         return self
 
     def clear_cache(self):
-        self.webdriver.execute_script("window.localStorage.clear();")
-        self.webdriver.execute_script("window.sessionStorage.clear();")
-        self.webdriver.get('chrome://settings/clearBrowserData') # for chrome
-        self.webdriver.find_element_by_xpath('//settings-ui').send_keys(Keys.ENTER)
+        # Save the cookies
+        cookies = self.webdriver.get_cookies()
+
+        # Clear all cookies (and cache)
+        self.webdriver.delete_all_cookies()
+
+        # Set the cookies again
+        for cookie in cookies:
+            self.webdriver.add_cookie(cookie)
 
     def __exit__(self, *args: Any) -> None:
         self.closeBrowser()

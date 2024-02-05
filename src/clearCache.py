@@ -1,13 +1,16 @@
 import json
+import logging
 from pathlib import Path
 from src.browser import Browser
 
 def clear_cache_for_account(account, args):
     with Browser(mobile=False, account=account, args=args) as desktopBrowser:
         desktopBrowser.clear_cache()
+        logging.info(f"Desktop caching cleared for {account['username']}")
 
     with Browser(mobile=True, account=account, args=args) as mobileBrowser:
         mobileBrowser.clear_cache()
+        logging.info(f"Mobile caching cleared for {account['username']}")
 
 def load_accounts():
     accountPath = Path(__file__).resolve().parent / "accounts.json"
