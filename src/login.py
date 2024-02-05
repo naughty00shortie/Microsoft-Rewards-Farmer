@@ -55,12 +55,14 @@ class Login:
     def executeLogin(self):
         self.utils.waitUntilVisible(By.ID, "loginHeader", 10)
         logging.info("[LOGIN] " + "Writing email...")
+        time.sleep(2)
         self.webdriver.find_element(By.NAME, "loginfmt").send_keys(
             self.browser.username
         )
         self.webdriver.find_element(By.ID, "idSIButton9").click()
 
         try:
+            time.sleep(2)
             self.enterPassword(self.browser.password)
         except Exception:  # pylint: disable=broad-except
             logging.error("[LOGIN] " + "2FA required !")

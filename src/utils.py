@@ -158,6 +158,7 @@ class Utils:
 
     def tryDismissAllMessages(self):
         buttons = [
+            (By.ID, "acceptButton"),
             (By.ID, "iLandingViewAction"),
             (By.ID, "iShowSkip"),
             (By.ID, "iNext"),
