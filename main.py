@@ -4,7 +4,6 @@ import logging
 import logging.handlers as handlers
 import random
 import sys
-import os
 import time
 import datetime
 from pathlib import Path
@@ -27,8 +26,8 @@ def main():
 
         isFinished = True
         for currentAccount in loadedAccounts:
-            clearCache.clear_cache_for_account(currentAccount, args)
             try:
+                clearCache.clear_cache_for_account(currentAccount, args)
                 isFinished = executeBot(currentAccount, notifier, args, isFinished)
             except Exception as e:
                 logging.exception(f"{e.__class__.__name__}: {e}")
