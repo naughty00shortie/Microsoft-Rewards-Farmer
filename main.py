@@ -27,7 +27,6 @@ def main():
 
         isFinished = True
         for currentAccount in loadedAccounts:
-            cleanupChromeProcesses()
             clearCache.clear_cache_for_account(currentAccount, args)
             try:
                 isFinished = executeBot(currentAccount, notifier, args, isFinished)
@@ -38,10 +37,6 @@ def main():
     time.sleep(seconds_until_next_quarter_hour)
 
 
-def cleanupChromeProcesses():
-    os.system("taskkill /im chrome.exe /t /f")
-    os.system("taskkill /im msedge.exe /t /f")
-    time.sleep(10)
 
 
 def setupLogging():
