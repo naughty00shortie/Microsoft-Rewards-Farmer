@@ -30,7 +30,8 @@ def main():
             cleanupChromeProcesses()
             try:
                 #clearCache.clear_cache_for_account(currentAccount, args)
-                isFinished = executeBot(currentAccount, notifier, args, isFinished)
+                if not executeBot(currentAccount, notifier, args) and isFinished:
+                    isFinished = False
             except Exception as e:
                 logging.exception(f"{e.__class__.__name__}: {e}")
         if not isFinished:
@@ -138,7 +139,7 @@ def setupAccounts() -> dict:
     return loadedAccounts
 
 
-def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace, isFinishedCheck: bool):
+def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace):
     logging.info(
         f'********************{currentAccount.get("username", "")}********************'
     )
@@ -156,7 +157,7 @@ def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace, isF
             remainingSearchesM,
         ) = desktopBrowser.utils.getRemainingSearches()
         if remainingSearches != 0:
-            accountPointsCounter, localIsFinished = Searches(desktopBrowser, isFinishedCheck).bingSearches(
+            accountPointsCounter, localIsFinished = Searches(desktopBrowser).bingSearches(
                 remainingSearches
             )
 
@@ -166,7 +167,7 @@ def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace, isF
                     mobile=True, account=currentAccount, args=args
             ) as mobileBrowser:
                 accountPointsCounter = Login(mobileBrowser).login()
-                accountPointsCounter, localIsFinished = Searches(mobileBrowser, isFinishedCheck).bingSearches(
+                accountPointsCounter, localIsFinished = Searches(mobileBrowser).bingSearches(
                     remainingSearchesM
                 )
 

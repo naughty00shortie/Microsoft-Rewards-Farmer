@@ -12,10 +12,9 @@ from src.browser import Browser
 
 
 class Searches:
-    def __init__(self, browser: Browser, isFinished: bool):
+    def __init__(self, browser: Browser):
         self.browser = browser
         self.webdriver = browser.webdriver
-        self.isFinished = isFinished
 
     def getGoogleTrends(self, wordsCount: int) -> list:
         searchTerms: list[str] = []
@@ -71,14 +70,14 @@ class Searches:
             else:
                 break
             if i >= 6:
-                self.isFinished = False
-                return pointsCounter, self.isFinished
+                return pointsCounter, False
         logging.info(
             f"[BING] Finished {self.browser.browserType.capitalize()} Edge Bing searches !"
         )
-        return pointsCounter
+        return pointsCounter, True
 
     def bingSearch(self, word: str):
+        errorCounter = 0
         while True:
             try:
                 self.webdriver.get("https://bing.com")
@@ -90,5 +89,6 @@ class Searches:
                 return self.browser.utils.getBingAccountPoints()
             except TimeoutException:
                 logging.error("[BING] " + "Timeout, retrying in 5 seconds...")
+                errorCounter += 1
                 time.sleep(5)
                 continue
