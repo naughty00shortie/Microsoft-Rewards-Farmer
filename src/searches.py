@@ -90,5 +90,8 @@ class Searches:
             except TimeoutException:
                 logging.error("[BING] " + "Timeout, retrying in 5 seconds...")
                 errorCounter += 1
+                if errorCounter >= 10:
+                    logging.error("[BING] " + "Too many timeouts, exiting.")
+                    return
                 time.sleep(5)
                 continue
