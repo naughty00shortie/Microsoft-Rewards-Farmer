@@ -27,7 +27,7 @@ def main():
         isFinished = True
         for currentAccount in loadedAccounts:
             try:
-                clearCache.clear_cache_for_account(currentAccount, args)
+                #clearCache.clear_cache_for_account(currentAccount, args)
                 isFinished = executeBot(currentAccount, notifier, args, isFinished)
             except Exception as e:
                 logging.exception(f"{e.__class__.__name__}: {e}")
