@@ -70,7 +70,7 @@ class Searches:
                 pointsCounter = points
             else:
                 break
-            if i >= 3:
+            if i >= 5:
                 self.isFinished = False
                 return pointsCounter, self.isFinished
         logging.info(
