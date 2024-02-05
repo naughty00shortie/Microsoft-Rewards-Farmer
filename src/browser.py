@@ -46,15 +46,8 @@ class Browser:
         return self
 
     def clear_cache(self):
-        # Save the cookies
-        cookies = self.webdriver.get_cookies()
-
-        # Clear all cookies (and cache)
         self.webdriver.delete_all_cookies()
 
-        # Set the cookies again
-        for cookie in cookies:
-            self.webdriver.add_cookie(cookie)
 
     def __exit__(self, *args: Any) -> None:
         self.closeBrowser()
@@ -76,6 +69,7 @@ class Browser:
         options.add_argument("--ignore-certificate-errors")
         options.add_argument("--ignore-certificate-errors-spki-list")
         options.add_argument("--ignore-ssl-errors")
+
 
         seleniumwireOptions: dict[str, Any] = {"verify_ssl": False}
 
