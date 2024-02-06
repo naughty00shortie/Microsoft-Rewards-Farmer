@@ -36,7 +36,8 @@ def main():
                 logging.exception(f"{e.__class__.__name__}: {e}")
         logging.info(f"{isFinishedArray.count(True)} / {len(isFinishedArray)} accounts finished")
         if not all(isFinishedArray):
-            seconds_until_next_quarter_hour = (15 * 60 - (now.minute * 60 + now.second)) % (15 * 60)
+            seconds_since_last_quarter_hour = (now.minute % 15) * 60 + now.second
+            seconds_until_next_quarter_hour = 900 - seconds_since_last_quarter_hour if seconds_since_last_quarter_hour < 900 else 0
             logging.info(f"Sleeping for {seconds_until_next_quarter_hour} seconds")
             time.sleep(seconds_until_next_quarter_hour)
 
