@@ -158,7 +158,7 @@ def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace, toa
             remainingSearchesM,
         ) = desktopBrowser.utils.getRemainingSearches()
         if remainingSearches != 0:
-            accountPointsCounter, localIsFinished = Searches(desktopBrowser).bingSearches(
+            accountPointsCounter, localIsFinished, desktopSearchesLeft = Searches(desktopBrowser).bingSearches(
                 remainingSearches
             )
 
@@ -168,7 +168,7 @@ def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace, toa
                     mobile=True, account=currentAccount, args=args
             ) as mobileBrowser:
                 accountPointsCounter = Login(mobileBrowser).login()
-                accountPointsCounter, localIsFinished = Searches(mobileBrowser).bingSearches(
+                accountPointsCounter, localIsFinished, mobileSearchesLeft = Searches(mobileBrowser).bingSearches(
                     remainingSearchesM
                 )
 
@@ -185,6 +185,8 @@ def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace, toa
                     f"Account: {currentAccount.get('username', '')}",
                     f"Points earned in session: {desktopBrowser.utils.formatNumber(accountPointsCounter - startingPoints)}",
                     f"Total points today: {desktopBrowser.utils.formatNumber(toatlArray + accountPointsCounter - startingPoints)}",
+                    f"Points left on desktop: {desktopSearchesLeft}",
+                    f"Points left on mobile: {mobileSearchesLeft}",
                     f"Total points: {desktopBrowser.utils.formatNumber(accountPointsCounter)}",
                     "---------------------------------------------------------",
                 ]

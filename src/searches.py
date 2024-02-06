@@ -73,7 +73,7 @@ class Searches:
                 break
             if i >= sectionSearches:
                 time.sleep(random.randint(60, 70))
-                return pointsCounter, False
+                return pointsCounter, False, numberOfSearches - i
         logging.info(
             f"[BING] Finished {self.browser.browserType.capitalize()} Edge Bing searches !"
         )
