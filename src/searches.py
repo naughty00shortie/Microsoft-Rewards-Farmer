@@ -48,6 +48,7 @@ class Searches:
             return []
 
     def bingSearches(self, numberOfSearches: int, pointsCounter: int = 0):
+        sectionSearches = 3
         logging.info(
             "[BING] "
             + f"Starting {self.browser.browserType.capitalize()} Edge Bing searches...",
@@ -57,7 +58,7 @@ class Searches:
         search_terms = self.getGoogleTrends(numberOfSearches)
         for word in search_terms:
             i += 1
-            logging.info("[BING] " + f"{i}/{numberOfSearches}")
+            logging.info("[BING] " + f"{i}/{sectionSearches} still need to search {numberOfSearches-i} times")
             points = self.bingSearch(word)
             if points <= pointsCounter:
                 relatedTerms = self.getRelatedTerms(word)[:2]
@@ -69,7 +70,7 @@ class Searches:
                 pointsCounter = points
             else:
                 break
-            if i >= 3:
+            if i >= sectionSearches:
                 time.sleep(random.randint(100, 120))
                 return pointsCounter, False
         logging.info(
