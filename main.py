@@ -24,7 +24,7 @@ def main():
     toatlArray = [0] * len(loadedAccounts)
     isFinishedArray = [False] * len(loadedAccounts)
     while not all(isFinishedArray):
-        now = datetime.datetime.now()
+        now = time.time()
         for index, currentAccount in enumerate(loadedAccounts):
             cleanupChromeProcesses()
             try:
@@ -36,10 +36,11 @@ def main():
                 logging.exception(f"{e.__class__.__name__}: {e}")
         logging.info(f"{isFinishedArray.count(True)} / {len(isFinishedArray)} accounts finished")
         if not all(isFinishedArray):
-            seconds_since_last_quarter_hour = (now.minute % 15) * 60 + now.second
-            seconds_until_next_quarter_hour = 900 - seconds_since_last_quarter_hour if seconds_since_last_quarter_hour < 900 else 0
-            logging.info(f"Sleeping for {seconds_until_next_quarter_hour} seconds")
-            time.sleep(seconds_until_next_quarter_hour)
+            elapsed_time = time.time() - now
+            if elapsed_time < 15 * 60:
+                remaining_time = 15 * 60 - elapsed_time
+                logging.info(f"Sleeping for {remaining_time / 60:.2f} minutes...")
+                time.sleep(remaining_time)
 
 def cleanupChromeProcesses():
     os.system("taskkill /im chrome.exe /t /f")
