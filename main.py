@@ -17,24 +17,24 @@ from src.notifier import Notifier
 POINTS_COUNTER = 0
 
 def main():
-    isFinished = False
     setupLogging()
     args = argumentParser()
     notifier = Notifier(args)
     loadedAccounts = setupAccounts()
-    while not isFinished:
+    toatlArray = [0] * len(loadedAccounts)
+    isFinishedArray = [False] * len(loadedAccounts)
+    while not all(isFinishedArray):
         now = datetime.datetime.now()
-
-        isFinished = True
-        for currentAccount in loadedAccounts:
+        for index, currentAccount in enumerate(loadedAccounts):
             cleanupChromeProcesses()
             try:
                 #clearCache.clear_cache_for_account(currentAccount, args)
-                if not executeBot(currentAccount, notifier, args) and isFinished:
-                    isFinished = False
+                if not isFinishedArray[index]:
+                    isFinishedArray[index], totalForToday = executeBot(currentAccount, notifier, args, toatlArray)
+                    toatlArray[index] += totalForToday
             except Exception as e:
                 logging.exception(f"{e.__class__.__name__}: {e}")
-        if not isFinished:
+        if not all(isFinishedArray):
             seconds_until_next_quarter_hour = (17 * 60 - (now.minute * 60 + now.second)) % (17 * 60)
             logging.info(f"Sleeping for {seconds_until_next_quarter_hour} seconds")
             time.sleep(seconds_until_next_quarter_hour)
@@ -139,7 +139,7 @@ def setupAccounts() -> dict:
     return loadedAccounts
 
 
-def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace):
+def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace, toatlArray: list):
     logging.info(
         f'********************{currentAccount.get("username", "")}********************'
     )
@@ -183,13 +183,14 @@ def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace):
                 [
 
                     f"Account: {currentAccount.get('username', '')}",
-                    f"Points earned today: {desktopBrowser.utils.formatNumber(accountPointsCounter - startingPoints)}",
+                    f"Points earned in session: {desktopBrowser.utils.formatNumber(accountPointsCounter - startingPoints)}",
                     f"Total points: {desktopBrowser.utils.formatNumber(accountPointsCounter)}",
+                    f"Total points today: {desktopBrowser.utils.formatNumber(toatlArray + accountPointsCounter - startingPoints)}",
                     "---------------------------------------------------------",
                 ]
             )
         )
-        return localIsFinished
+        return localIsFinished, (accountPointsCounter - startingPoints)
 
 
 if __name__ == "__main__":
