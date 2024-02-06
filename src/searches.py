@@ -77,7 +77,7 @@ class Searches:
         logging.info(
             f"[BING] Finished {self.browser.browserType.capitalize()} Edge Bing searches !"
         )
-        return pointsCounter, True
+        return pointsCounter, True, 0
 
     def bingSearch(self, word: str):
         errorCounter = 0
