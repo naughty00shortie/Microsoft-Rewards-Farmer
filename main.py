@@ -34,6 +34,7 @@ def main():
                     toatlArray[index] += totalForToday
             except Exception as e:
                 logging.exception(f"{e.__class__.__name__}: {e}")
+        logging.info(f"{isFinishedArray.count(True)} / {len(isFinishedArray)} accounts finished")
         if not all(isFinishedArray):
             seconds_until_next_quarter_hour = (17 * 60 - (now.minute * 60 + now.second)) % (17 * 60)
             logging.info(f"Sleeping for {seconds_until_next_quarter_hour} seconds")
