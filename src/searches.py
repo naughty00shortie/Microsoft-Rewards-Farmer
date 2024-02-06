@@ -58,7 +58,7 @@ class Searches:
         search_terms = self.getGoogleTrends(numberOfSearches)
         for word in search_terms:
             i += 1
-            if i > numberOfSearches:
+            if i < numberOfSearches:
                 logging.info("[BING] " + f"{i}/{sectionSearches} still need to search {numberOfSearches-i} time(s)")
             else:
                 logging.info("[BING] " + f"{i}/{numberOfSearches+1} still need to search {numberOfSearches-i} time(s)")
