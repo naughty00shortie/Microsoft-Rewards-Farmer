@@ -145,6 +145,8 @@ def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace, toa
         f'********************{currentAccount.get("username", "")}********************'
     )
     with Browser(mobile=False, account=currentAccount, args=args) as desktopBrowser:
+        desktopSearchesLeft = 0
+        mobileSearchesLeft = 0
         accountPointsCounter = Login(desktopBrowser).login()
         startingPoints = accountPointsCounter
         logging.info(
