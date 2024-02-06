@@ -174,9 +174,17 @@ def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace, toa
                 accountPointsCounter, localIsFinished, mobileSearchesLeft = Searches(mobileBrowser).bingSearches(
                     remainingSearchesM
                 )
-
         logging.info(
-            f"[POINTS] You have earned {desktopBrowser.utils.formatNumber(accountPointsCounter - startingPoints)} points today !"
+            f"[POINTS] You have {desktopSearchesLeft} searches left on desktop !"
+        )
+        logging.info(
+            f"[POINTS] You have {mobileSearchesLeft} searches left on mobile !"
+        )
+        logging.info(
+            f"Points earned in session: {desktopBrowser.utils.formatNumber(accountPointsCounter - startingPoints)}"
+        )
+        logging.info(
+            f"Total points today: {desktopBrowser.utils.formatNumber(toatlArray + accountPointsCounter - startingPoints)}"
         )
         logging.info(
             f"[POINTS] You are now at {desktopBrowser.utils.formatNumber(accountPointsCounter)} points !\n"
