@@ -58,7 +58,10 @@ class Searches:
         search_terms = self.getGoogleTrends(numberOfSearches)
         for word in search_terms:
             i += 1
-            logging.info("[BING] " + f"{i}/{sectionSearches} still need to search {numberOfSearches-i} time(s)")
+            if i > numberOfSearches:
+                logging.info("[BING] " + f"{i}/{sectionSearches} still need to search {numberOfSearches-i} time(s)")
+            else:
+                logging.info("[BING] " + f"{i}/{numberOfSearches+1} still need to search {numberOfSearches-i} time(s)")
             time.sleep(random.randint(5, 10))
             points = self.bingSearch(word)
             if points <= pointsCounter:
