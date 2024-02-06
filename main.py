@@ -30,7 +30,7 @@ def main():
             try:
                 #clearCache.clear_cache_for_account(currentAccount, args)
                 if not isFinishedArray[index]:
-                    isFinishedArray[index], totalForToday = executeBot(currentAccount, notifier, args, toatlArray)
+                    isFinishedArray[index], totalForToday = executeBot(currentAccount, notifier, args, toatlArray[index])
                     toatlArray[index] += totalForToday
             except Exception as e:
                 logging.exception(f"{e.__class__.__name__}: {e}")
@@ -139,7 +139,7 @@ def setupAccounts() -> dict:
     return loadedAccounts
 
 
-def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace, toatlArray: list):
+def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace, toatlArray: int):
     logging.info(
         f'********************{currentAccount.get("username", "")}********************'
     )
