@@ -187,8 +187,8 @@ def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace, toa
                     f"Account: {currentAccount.get('username', '')}",
                     f"Points earned in session: {desktopBrowser.utils.formatNumber(accountPointsCounter - startingPoints)}",
                     f"Total points today: {desktopBrowser.utils.formatNumber(toatlArray + accountPointsCounter - startingPoints)}",
-                    f"Points left on desktop: {desktopSearchesLeft}",
-                    f"Points left on mobile: {mobileSearchesLeft}",
+                    f"Searches left on desktop: {desktopSearchesLeft}",
+                    f"Searches left on mobile: {mobileSearchesLeft}",
                     f"Total points: {desktopBrowser.utils.formatNumber(accountPointsCounter)}",
                     "---------------------------------------------------------",
                 ]
