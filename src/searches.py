@@ -62,7 +62,7 @@ class Searches:
                 logging.info("[BING] " + f"{i}/{sectionSearches} still need to search {numberOfSearches-i} time(s)")
             else:
                 logging.info("[BING] " + f"{i}/{numberOfSearches+1} still need to search {numberOfSearches-i} time(s)")
-            time.sleep(random.randint(5, 10))
+            time.sleep(random.randint(30, 60))
             points = self.bingSearch(word)
             if points <= pointsCounter:
                 relatedTerms = self.getRelatedTerms(word)[:2]
@@ -75,7 +75,6 @@ class Searches:
             else:
                 break
             if i >= sectionSearches:
-                time.sleep(random.randint(150, 180))
                 return pointsCounter, numberOfSearches - i
         logging.info(
             f"[BING] Finished {self.browser.browserType.capitalize()} Edge Bing searches !"
