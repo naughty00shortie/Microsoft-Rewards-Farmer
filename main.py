@@ -17,6 +17,7 @@ from src.notifier import Notifier
 POINTS_COUNTER = 0
 
 def main():
+    isFirstTime = True
     setupLogging()
     args = argumentParser()
     notifier = Notifier(args)
@@ -30,7 +31,7 @@ def main():
             try:
                 #clearCache.clear_cache_for_account(currentAccount, args)
                 if not isFinishedArray[index]:
-                    isFinishedArray[index], totalForToday = executeBot(currentAccount, notifier, args, toatlArray[index])
+                    isFinishedArray[index], totalForToday = executeBot(currentAccount, notifier, args, toatlArray[index], isFirstTime)
                     toatlArray[index] += totalForToday
             except Exception as e:
                 logging.exception(f"{e.__class__.__name__}: {e}")
@@ -142,7 +143,7 @@ def setupAccounts() -> dict:
     return loadedAccounts
 
 
-def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace, toatlArray: int):
+def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace, toatlArray: int, isfirstTime: bool):
     logging.info(
         f'********************{currentAccount.get("username", "")}********************'
     )
@@ -154,8 +155,9 @@ def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace, toa
         logging.info(
             f"[POINTS] You have {desktopBrowser.utils.formatNumber(accountPointsCounter)} points on your account !"
         )
-        DailySet(desktopBrowser).completeDailySet()
-        PunchCards(desktopBrowser).completePunchCards()
+        if isfirstTime:
+            DailySet(desktopBrowser).completeDailySet()
+            PunchCards(desktopBrowser).completePunchCards()
         # MorePromotions(desktopBrowser).completeMorePromotions()
         (
             remainingSearches,
