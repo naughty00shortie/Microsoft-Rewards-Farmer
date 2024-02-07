@@ -24,7 +24,7 @@ def main():
     toatlArray = [0] * len(loadedAccounts)
     isFinishedArray = [False] * len(loadedAccounts)
     while not all(isFinishedArray):
-        now = datetime.datetime.now()
+        now = time.time()
         for index, currentAccount in enumerate(loadedAccounts):
             cleanupChromeProcesses()
             try:
@@ -34,10 +34,13 @@ def main():
                     toatlArray[index] += totalForToday
             except Exception as e:
                 logging.exception(f"{e.__class__.__name__}: {e}")
+        logging.info(f"{isFinishedArray.count(True)} / {len(isFinishedArray)} accounts finished")
         if not all(isFinishedArray):
-            seconds_until_next_quarter_hour = (17 * 60 - (now.minute * 60 + now.second)) % (17 * 60)
-            logging.info(f"Sleeping for {seconds_until_next_quarter_hour} seconds")
-            time.sleep(seconds_until_next_quarter_hour)
+            elapsed_time = time.time() - now
+            if elapsed_time < 15 * 60:
+                remaining_time = 15 * 60 - elapsed_time
+                logging.info(f"Sleeping for {remaining_time / 60:.2f} minutes...")
+                time.sleep(remaining_time)
 
 def cleanupChromeProcesses():
     os.system("taskkill /im chrome.exe /t /f")
@@ -144,6 +147,8 @@ def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace, toa
         f'********************{currentAccount.get("username", "")}********************'
     )
     with Browser(mobile=False, account=currentAccount, args=args) as desktopBrowser:
+        desktopSearchesLeft = 0
+        mobileSearchesLeft = 0
         accountPointsCounter = Login(desktopBrowser).login()
         startingPoints = accountPointsCounter
         logging.info(
@@ -157,22 +162,30 @@ def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace, toa
             remainingSearchesM,
         ) = desktopBrowser.utils.getRemainingSearches()
         if remainingSearches != 0:
-            accountPointsCounter, localIsFinished = Searches(desktopBrowser).bingSearches(
+            accountPointsCounter, localIsFinished, desktopSearchesLeft = Searches(desktopBrowser).bingSearches(
                 remainingSearches
             )
 
-        if remainingSearchesM != 0:
+        if remainingSearches == 0 and remainingSearchesM != 0:
             desktopBrowser.closeBrowser()
             with Browser(
                     mobile=True, account=currentAccount, args=args
             ) as mobileBrowser:
                 accountPointsCounter = Login(mobileBrowser).login()
-                accountPointsCounter, localIsFinished = Searches(mobileBrowser).bingSearches(
+                accountPointsCounter, localIsFinished, mobileSearchesLeft = Searches(mobileBrowser).bingSearches(
                     remainingSearchesM
                 )
-
         logging.info(
-            f"[POINTS] You have earned {desktopBrowser.utils.formatNumber(accountPointsCounter - startingPoints)} points today !"
+            f"[POINTS] You have {desktopSearchesLeft} searches left on desktop !"
+        )
+        logging.info(
+            f"[POINTS] You have {mobileSearchesLeft} searches left on mobile !"
+        )
+        logging.info(
+            f"Points earned in session: {desktopBrowser.utils.formatNumber(accountPointsCounter - startingPoints)}"
+        )
+        logging.info(
+            f"Total points today: {desktopBrowser.utils.formatNumber(toatlArray + accountPointsCounter - startingPoints)}"
         )
         logging.info(
             f"[POINTS] You are now at {desktopBrowser.utils.formatNumber(accountPointsCounter)} points !\n"
@@ -184,6 +197,8 @@ def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace, toa
                     f"Account: {currentAccount.get('username', '')}",
                     f"Points earned in session: {desktopBrowser.utils.formatNumber(accountPointsCounter - startingPoints)}",
                     f"Total points today: {desktopBrowser.utils.formatNumber(toatlArray + accountPointsCounter - startingPoints)}",
+                    f"Searches left on desktop: {desktopSearchesLeft}",
+                    f"Searches left on mobile: {mobileSearchesLeft}",
                     f"Total points: {desktopBrowser.utils.formatNumber(accountPointsCounter)}",
                     "---------------------------------------------------------",
                 ]
