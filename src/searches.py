@@ -74,6 +74,7 @@ class Searches:
             else:
                 break
             if i >= sectionSearches:
+                time.sleep(120)
                 return pointsCounter, numberOfSearches - i
         logging.info(
             f"[BING] Finished {self.browser.browserType.capitalize()} Edge Bing searches !"
@@ -89,7 +90,7 @@ class Searches:
                 searchbar = self.webdriver.find_element(By.ID, "sb_form_q")
                 searchbar.send_keys(word)
                 searchbar.submit()
-                time.sleep(random.randint(40, 60))
+                time.sleep(random.randint(10, 15))
                 return self.browser.utils.getBingAccountPoints()
             except TimeoutException:
                 logging.error("[BING] " + "Timeout, retrying in 5 seconds...")
