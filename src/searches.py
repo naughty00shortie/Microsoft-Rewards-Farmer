@@ -72,6 +72,7 @@ class Searches:
             if points > 0:
                 pointsCounter = points
             else:
+                time.sleep(180)
                 break
             if i >= sectionSearches:
                 time.sleep(120)
