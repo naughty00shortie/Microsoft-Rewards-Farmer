@@ -72,10 +72,10 @@ class Searches:
             if points > 0:
                 pointsCounter = points
             else:
-                time.sleep(180)
+                time.sleep(200)
                 break
             if i >= sectionSearches:
-                time.sleep(120)
+                time.sleep(200)
                 return pointsCounter, numberOfSearches - i
         logging.info(
             f"[BING] Finished {self.browser.browserType.capitalize()} Edge Bing searches !"
