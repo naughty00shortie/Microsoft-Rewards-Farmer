@@ -162,7 +162,7 @@ def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace, toa
             remainingSearchesM,
         ) = desktopBrowser.utils.getRemainingSearches()
         if remainingSearches != 0:
-            accountPointsCounter, localIsFinished, desktopSearchesLeft = Searches(desktopBrowser).bingSearches(
+            accountPointsCounter, desktopSearchesLeft = Searches(desktopBrowser).bingSearches(
                 remainingSearches
             )
         else:
@@ -173,11 +173,16 @@ def executeBot(currentAccount, notifier: Notifier, args: argparse.Namespace, toa
                     mobile=True, account=currentAccount, args=args
             ) as mobileBrowser:
                 accountPointsCounter = Login(mobileBrowser).login()
-                accountPointsCounter, localIsFinished, mobileSearchesLeft = Searches(mobileBrowser).bingSearches(
+                accountPointsCounter, mobileSearchesLeft = Searches(mobileBrowser).bingSearches(
                     remainingSearchesM
                 )
         else:
             mobileSearchesLeft = 20
+
+        if remainingSearches == 0 and remainingSearchesM == 0:
+            localIsFinished = True
+        else:
+            localIsFinished = False
         logging.info(
             f"[POINTS] You have {desktopSearchesLeft} searches left on desktop !"
         )
