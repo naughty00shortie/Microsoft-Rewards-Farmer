@@ -63,6 +63,7 @@ class Searches:
             else:
                 logging.info("[BING] " + f"{i}/{numberOfSearches+1} still need to search {numberOfSearches-i} time(s)")
             points = self.bingSearch(word)
+            time.sleep(30)
             if points <= pointsCounter:
                 relatedTerms = self.getRelatedTerms(word)[:2]
                 for term in relatedTerms:
