@@ -62,7 +62,7 @@ class Login:
         self.webdriver.find_element(By.ID, "idSIButton9").click()
 
         try:
-            time.sleep(2)
+            time.sleep(6)
             self.enterPassword(self.browser.password)
         except Exception:  # pylint: disable=broad-except
             logging.error("[LOGIN] " + "2FA required !")
@@ -88,16 +88,20 @@ class Login:
 
     def enterPassword(self, password):
         self.utils.waitUntilClickable(By.NAME, "passwd", 10)
+        time.sleep(5)
         self.utils.waitUntilClickable(By.ID, "idSIButton9", 10)
+        time.sleep(5)
         # browser.webdriver.find_element(By.NAME, "passwd").send_keys(password)
         # If password contains special characters like " ' or \, send_keys() will not work
         password = password.replace("\\", "\\\\").replace('"', '\\"')
+        time.sleep(5)
         self.webdriver.execute_script(
             f'document.getElementsByName("passwd")[0].value = "{password}";'
         )
         logging.info("[LOGIN] " + "Writing password...")
+        time.sleep(5)
         self.webdriver.find_element(By.ID, "idSIButton9").click()
-        time.sleep(3)
+        time.sleep(4)
 
     def checkBingLogin(self):
         self.webdriver.get(
