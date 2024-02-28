@@ -53,7 +53,8 @@ class Login:
         return points
 
     def executeLogin(self):
-        self.utils.waitUntilVisible(By.ID, "loginHeader", 10)
+
+        self.utils.waitUntilVisible(By.NAME, "loginfmt", 10)
         logging.info("[LOGIN] " + "Writing email...")
         time.sleep(2)
         self.webdriver.find_element(By.NAME, "loginfmt").send_keys(
