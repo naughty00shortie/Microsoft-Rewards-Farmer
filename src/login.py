@@ -56,7 +56,7 @@ class Login:
 
         self.utils.waitUntilVisible(By.NAME, "loginfmt", 10)
         logging.info("[LOGIN] " + "Writing email...")
-        time.sleep(2)
+        time.sleep(10)
         self.webdriver.find_element(By.NAME, "loginfmt").send_keys(
             self.browser.username
         )
