@@ -66,8 +66,8 @@ class Login:
         self.webdriver.find_element(By.NAME, "loginfmt").send_keys(
             self.browser.username
         )
-      #  self.webdriver.find_element(By.ID, "idSIButton9").click()
-        exit(0)
+        time.sleep(2)  # wait for 2 seconds
+        self.webdriver.find_element(By.ID, "idSIButton9").click()
         try:
             time.sleep(10)
             self.enterPassword(self.browser.password)
