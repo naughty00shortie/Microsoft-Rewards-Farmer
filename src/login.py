@@ -4,6 +4,8 @@ import time
 import urllib.parse
 
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 from src.browser import Browser
 
@@ -53,8 +55,9 @@ class Login:
         return points
 
     def executeLogin(self):
-
-        self.utils.waitUntilVisible(By.NAME, "loginfmt", 10)
+        WebDriverWait(self.webdriver, 10).until(
+            EC.presence_of_element_located((By.NAME, "loginfmt"))
+        )
         logging.info("[LOGIN] " + "Writing email...")
         time.sleep(15)
         self.webdriver.find_element(By.NAME, "loginfmt").send_keys(
