@@ -55,11 +55,10 @@ class Login:
         return points
 
     def executeLogin(self):
-        WebDriverWait(self.webdriver, 10).until(
-            EC.presence_of_element_located((By.NAME, "loginfmt"))
+        WebDriverWait(self.webdriver, 20).until(
+            EC.visibility_of_element_located((By.NAME, "loginfmt"))
         )
         logging.info("[LOGIN] " + "Writing email...")
-        time.sleep(15)
         self.webdriver.find_element(By.NAME, "loginfmt").send_keys(
             self.browser.username
         )
