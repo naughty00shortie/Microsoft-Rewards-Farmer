@@ -20,6 +20,7 @@ class Login:
         logging.info("[LOGIN] " + "Logging-in...")
         try:
             self.webdriver.get("https://login.live.com/")
+            time.sleep(5)
             logging.info("[LOGIN] " + "Navigated to login page.")
         except Exception as e:
             logging.error("[LOGIN] " + "Failed to navigate to login page: " + str(e))
@@ -56,7 +57,10 @@ class Login:
 
     def executeLogin(self):
         WebDriverWait(self.webdriver, 20).until(
-            EC.visibility_of_element_located((By.NAME, "loginfmt"))
+            EC.presence_of_element_located((By.NAME, "loginfmt"))
+        )
+        WebDriverWait(self.webdriver, 20).until(
+            EC.element_to_be_clickable((By.NAME, "loginfmt"))
         )
         logging.info("[LOGIN] " + "Writing email...")
         self.webdriver.find_element(By.NAME, "loginfmt").send_keys(
