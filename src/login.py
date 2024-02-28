@@ -35,7 +35,7 @@ class Login:
                 break
             except Exception:  # pylint: disable=broad-except
                 try:
-                    self.utils.waitUntilVisible(By.ID, "loginHeader", 0.1)
+                    self.utils.waitUntilVisible(By.ID, "loginHeader", 4)
                     break
                 except Exception:  # pylint: disable=broad-except
                     if self.utils.tryDismissAllMessages():
@@ -56,17 +56,11 @@ class Login:
         return points
 
     def executeLogin(self):
-        WebDriverWait(self.webdriver, 20).until(
-            EC.presence_of_element_located((By.NAME, "loginfmt"))
-        )
-        WebDriverWait(self.webdriver, 20).until(
-            EC.element_to_be_clickable((By.NAME, "loginfmt"))
-        )
+        self.utils.waitUntilVisible(By.ID, "loginHeader", 10)
         logging.info("[LOGIN] " + "Writing email...")
         self.webdriver.find_element(By.NAME, "loginfmt").send_keys(
             self.browser.username
         )
-        time.sleep(2)  # wait for 2 seconds
         self.webdriver.find_element(By.ID, "idSIButton9").click()
         try:
             time.sleep(10)
