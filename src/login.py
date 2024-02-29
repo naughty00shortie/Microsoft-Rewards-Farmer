@@ -59,8 +59,8 @@ class Login:
         self.utils.waitUntilVisible(By.ID, "loginHeader", 10)
         logging.info("[LOGIN] " + "Writing email...")
         # Wait until the username input field is ready
-        WebDriverWait(self.webdriver, 10).until(EC.presence_of_element_located((By.NAME, "loginfmt")))
-        self.webdriver.find_element(By.NAME, "loginfmt").send_keys(
+        WebDriverWait(self.webdriver, 10).until(EC.presence_of_element_located((By.ID, "i0116")))
+        self.webdriver.find_element(By.ID, "i0116").send_keys(
             self.browser.username
         )
         self.webdriver.find_element(By.ID, "idSIButton9").click()
