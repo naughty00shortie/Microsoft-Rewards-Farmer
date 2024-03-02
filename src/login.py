@@ -58,14 +58,14 @@ class Login:
     def executeLogin(self):
         self.utils.waitUntilVisible(By.ID, "loginHeader", 10)
         logging.info("[LOGIN] " + "Writing email...")
-        # Wait until the username input field is ready
-        WebDriverWait(self.webdriver, 10).until(EC.presence_of_element_located((By.ID, "i0116")))
-        self.webdriver.find_element(By.ID, "i0116").send_keys(
+        iframe = self.webdriver.find_element(By.TAG_NAME, "iframe")
+        self.webdriver.switch_to.frame(iframe)
+        self.webdriver.find_element(By.NAME, "loginfmt").send_keys(
             self.browser.username
         )
         self.webdriver.find_element(By.ID, "idSIButton9").click()
+
         try:
-            time.sleep(10)
             self.enterPassword(self.browser.password)
         except Exception:  # pylint: disable=broad-except
             logging.error("[LOGIN] " + "2FA required !")
@@ -78,9 +78,9 @@ class Login:
             input()
 
         while not (
-            urllib.parse.urlparse(self.webdriver.current_url).path == "/"
-            and urllib.parse.urlparse(self.webdriver.current_url).hostname
-            == "account.microsoft.com"
+                urllib.parse.urlparse(self.webdriver.current_url).path == "/"
+                and urllib.parse.urlparse(self.webdriver.current_url).hostname
+                == "account.microsoft.com"
         ):
             self.utils.tryDismissAllMessages()
             time.sleep(1)
