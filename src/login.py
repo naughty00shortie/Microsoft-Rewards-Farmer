@@ -6,6 +6,7 @@ import urllib.parse
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
 
 from src.browser import Browser
 
@@ -58,8 +59,10 @@ class Login:
     def executeLogin(self):
         self.utils.waitUntilVisible(By.ID, "loginHeader", 10)
         logging.info("[LOGIN] " + "Writing email...")
-        iframe = self.webdriver.find_element(By.TAG_NAME, "iframe")
-        self.webdriver.switch_to.frame(iframe)
+        outer_iframe = self.webdriver.find_element(By.TAG_NAME, "iframe")
+        self.webdriver.switch_to.frame(outer_iframe)
+        inner_iframe = self.webdriver.find_element(By.XPATH, "//iframe[@title='Sign in']")
+        self.webdriver.switch_to.frame(inner_iframe)
         self.webdriver.find_element(By.NAME, "loginfmt").send_keys(
             self.browser.username
         )
