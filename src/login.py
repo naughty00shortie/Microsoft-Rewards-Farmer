@@ -3,10 +3,11 @@ import logging
 import time
 import urllib.parse
 
-from selenium.webdriver.common.by import By
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.by import By
 
 from src.browser import Browser
 
@@ -36,7 +37,7 @@ class Login:
                 break
             except Exception:  # pylint: disable=broad-except
                 try:
-                    self.utils.waitUntilVisible(By.ID, "loginHeader", 4)
+                    self.utils.waitUntilVisible(By.ID, "i0116", 4)
                     break
                 except Exception:  # pylint: disable=broad-except
                     if self.utils.tryDismissAllMessages():
@@ -57,12 +58,8 @@ class Login:
         return points
 
     def executeLogin(self):
-        self.utils.waitUntilVisible(By.ID, "loginHeader", 10)
+        self.utils.waitUntilVisible(By.ID, "i0116", 10)
         logging.info("[LOGIN] " + "Writing email...")
-        outer_iframe = self.webdriver.find_element(By.TAG_NAME, "iframe")
-        self.webdriver.switch_to.frame(outer_iframe)
-        inner_iframe = self.webdriver.find_element(By.XPATH, "//iframe[@title='Sign in']")
-        self.webdriver.switch_to.frame(inner_iframe)
         self.webdriver.find_element(By.NAME, "loginfmt").send_keys(
             self.browser.username
         )
@@ -100,14 +97,19 @@ class Login:
         # browser.webdriver.find_element(By.NAME, "passwd").send_keys(password)
         # If password contains special characters like " ' or \, send_keys() will not work
         password = password.replace("\\", "\\\\").replace('"', '\\"')
-        time.sleep(5)
-        self.webdriver.execute_script(
-            f'document.getElementsByName("passwd")[0].value = "{password}";'
-        )
+
         logging.info("[LOGIN] " + "Writing password...")
-        time.sleep(5)
-        self.webdriver.find_element(By.ID, "idSIButton9").click()
-        time.sleep(4)
+        password_field = self.webdriver.find_element(By.NAME, "passwd")
+
+        while True:
+            password_field.send_keys(password)
+            time.sleep(3)
+            if password_field.get_attribute("value") == password:
+                self.webdriver.find_element(By.ID, "idSIButton9").click()
+                break
+
+            password_field.clear()
+            time.sleep(3)
 
     def checkBingLogin(self):
         self.webdriver.get(
