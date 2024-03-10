@@ -26,7 +26,7 @@ def main():
     toatlArray = [0] * len(loadedAccounts)
     isFinishedArray = [False] * len(loadedAccounts)
     while not all(isFinishedArray):
-        if iCounter == 10:
+        if iCounter == 5:
             cleanupChromeProcesses()
             iCounter = -1
             restart_script()
