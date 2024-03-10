@@ -18,6 +18,7 @@ POINTS_COUNTER = 0
 
 def main():
     isFirstTime = True
+    iCounter = 0
     setupLogging()
     args = argumentParser()
     notifier = Notifier(args)
@@ -25,6 +26,10 @@ def main():
     toatlArray = [0] * len(loadedAccounts)
     isFinishedArray = [False] * len(loadedAccounts)
     while not all(isFinishedArray):
+        if iCounter == 20:
+            cleanupChromeProcesses()
+            iCounter = 0
+            restart_script()
         now = time.time()
         for index, currentAccount in enumerate(loadedAccounts):
             cleanupChromeProcesses()
@@ -47,6 +52,10 @@ def cleanupChromeProcesses():
     os.system("taskkill /im chrome.exe /t /f")
     os.system("taskkill /im msedge.exe /t /f")
     time.sleep(1)
+
+def restart_script():
+    python = sys.executable
+    os.execl(python, python, *sys.argv)
 
 
 def setupLogging():
