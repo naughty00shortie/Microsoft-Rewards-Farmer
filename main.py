@@ -18,7 +18,7 @@ POINTS_COUNTER = 0
 
 def main():
     isFirstTime = True
-    iCounter = 0
+    iCounter = -1
     setupLogging()
     args = argumentParser()
     notifier = Notifier(args)
@@ -26,10 +26,11 @@ def main():
     toatlArray = [0] * len(loadedAccounts)
     isFinishedArray = [False] * len(loadedAccounts)
     while not all(isFinishedArray):
-        if iCounter == 20:
+        if iCounter == 10:
             cleanupChromeProcesses()
-            iCounter = 0
+            iCounter = -1
             restart_script()
+        iCounter += 1
         now = time.time()
         for index, currentAccount in enumerate(loadedAccounts):
             cleanupChromeProcesses()
