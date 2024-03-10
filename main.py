@@ -18,7 +18,6 @@ POINTS_COUNTER = 0
 
 def main():
     isFirstTime = True
-    iCounter = -1
     setupLogging()
     args = argumentParser()
     notifier = Notifier(args)
@@ -26,11 +25,6 @@ def main():
     toatlArray = [0] * len(loadedAccounts)
     isFinishedArray = [False] * len(loadedAccounts)
     while not all(isFinishedArray):
-        if iCounter == 5:
-            cleanupChromeProcesses()
-            iCounter = -1
-            restart_script()
-        iCounter += 1
         now = time.time()
         for index, currentAccount in enumerate(loadedAccounts):
             cleanupChromeProcesses()
@@ -48,6 +42,8 @@ def main():
                 remaining_time = 15 * 60 - elapsed_time
                 logging.info(f"Sleeping for {remaining_time / 60:.2f} minutes...")
                 time.sleep(remaining_time)
+                restart_script()
+
 
 def cleanupChromeProcesses():
     os.system("taskkill /im chrome.exe /t /f")
