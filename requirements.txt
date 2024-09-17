@@ -5,6 +5,5 @@ undetected-chromedriver
 undetected_chromedriver
 selenium-wire
 psutil~=5.9.6
-selenium --upgrade
 setuptools
 blinker~=1.7.0
