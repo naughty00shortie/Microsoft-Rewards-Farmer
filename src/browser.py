@@ -9,6 +9,7 @@ import ipapi
 import seleniumwire.undetected_chromedriver as webdriver
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.keys import Keys
+from fake_useragent import UserAgent
 
 from src.userAgentGenerator import GenerateUserAgent
 from src.utils import Utils
@@ -61,11 +62,12 @@ class Browser:
     def browserSetup(
         self,
     ) -> WebDriver:
+        ua = UserAgent()
+        userAgent = ua.random
         options = webdriver.ChromeOptions()
         options.headless = self.headless
         options.add_argument(f"--lang={self.localeLang}")
         options.add_argument("--log-level=3")
-
         options.add_argument("--ignore-certificate-errors")
         options.add_argument("--ignore-certificate-errors-spki-list")
         options.add_argument("--ignore-ssl-errors")
@@ -74,6 +76,7 @@ class Browser:
         options.add_argument("--disk-cache-size=0")
         options.add_argument("--media-cache-size=0")
         options.add_argument('--disable-blink-features=AutomationControlled')
+        options.add_argument(f'user-agent={userAgent}')
 
 
         seleniumwireOptions: dict[str, Any] = {"verify_ssl": False}
