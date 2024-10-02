@@ -73,7 +73,7 @@ class Browser:
         options.add_argument("--disable-cache")
         options.add_argument("--disk-cache-size=0")
         options.add_argument("--media-cache-size=0")
-
+        options.add_argument('--disable-blink-features=AutomationControlled')
 
 
         seleniumwireOptions: dict[str, Any] = {"verify_ssl": False}

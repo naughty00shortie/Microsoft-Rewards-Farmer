@@ -4,8 +4,6 @@ from io import BytesIO
 from zipfile import ZipFile
 
 import requests
-
-
 def update(version: str):
     url = "https://github.com/naughty00shortie/Microsoft-Rewards-Farmer/archive/refs/heads/master.zip"
     folderName = "Microsoft-Rewards-Farmer-master"
@@ -43,7 +41,6 @@ def update(version: str):
     with open("version.txt", "w") as f:
         f.write(version)
     print("Done !")
-
 
 def getCurrentVersion():
     if os.path.exists("version.txt"):
