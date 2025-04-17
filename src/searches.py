@@ -21,19 +21,29 @@ class Searches:
         i = 0
         while len(searchTerms) < wordsCount:
             i += 1
-            r = requests.get(
-                f'https://trends.google.com/trends/api/dailytrends?hl={self.browser.localeLang}&ed={(date.today() - timedelta(days=i)).strftime("%Y%m%d")}&geo={self.browser.localeGeo}&ns=15'
-            )
-            trends = json.loads(r.text[6:])
-            for topic in trends["default"]["trendingSearchesDays"][0][
-                "trendingSearches"
-            ]:
-                searchTerms.append(topic["title"]["query"].lower())
-                searchTerms.extend(
-                    relatedTopic["query"].lower()
-                    for relatedTopic in topic["relatedQueries"]
-                )
-            searchTerms = list(set(searchTerms))
+            url = f'https://trends.google.com/trends/api/dailytrends?hl={self.browser.localeLang}&ed={(date.today() - timedelta(days=i)).strftime("%Y%m%d")}&geo={self.browser.localeGeo}&ns=15'
+            logging.debug(f"GET request to: {url}")
+
+            try:
+                r = requests.get(url)
+                r.raise_for_status()
+                logging.debug(f"Raw response from Google Trends API:\n{r.text}")
+
+                trends = json.loads(r.text)
+                searchTerms.extend([topic["title"]["query"].lower() for topic in trends["default"]["trendingSearchesDays"][0]["trendingSearches"]])
+                for topic in trends["default"]["trendingSearchesDays"][0]["trendingSearches"]:
+                    searchTerms.extend(
+                        [relatedTopic["query"].lower() for relatedTopic in topic["relatedQueries"]]
+                    )
+
+            except requests.exceptions.RequestException as e:
+                logging.error(f"Error during request to Google Trends API: {e}")
+                return []
+            except json.JSONDecodeError as e:
+                logging.error(f"Error decoding JSON from Google Trends API: {e}. Response text:\n{r.text}")
+                return []
+
+        searchTerms = list(set(searchTerms))
         del searchTerms[wordsCount : (len(searchTerms) + 1)]
         return searchTerms
 
