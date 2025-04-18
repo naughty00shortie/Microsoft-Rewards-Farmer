@@ -16,36 +16,83 @@ class Searches:
         self.browser = browser
         self.webdriver = browser.webdriver
 
-    def getGoogleTrends(self, wordsCount: int) -> list:
-        searchTerms: list[str] = []
-        i = 0
-        while len(searchTerms) < wordsCount:
-            i += 1
-            url = f'https://trends.google.com/trends/api/dailytrends?hl={self.browser.localeLang}&ed={(date.today() - timedelta(days=i)).strftime("%Y%m%d")}&geo={self.browser.localeGeo}&ns=15'
-            logging.debug(f"GET request to: {url}")
 
+    def getGoogleTrends(self, words_count: int) -> list[str]:
+        """
+        Retrieves Google Trends search terms via the new API (last 48 hours).
+        """
+        logging.debug("Starting Google Trends fetch (last 48 hours)...")
+        search_terms: list[str] = []
+        session = requests.Session()
+        # Add common headers (you might need to adjust these based on network inspection)
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+        session.headers.update(headers)
+
+        url = "https://trends.google.com/_/TrendsUi/data/batchexecute"
+        payload = f'f.req=[[[i0OFE,"[null, null, \\"{self.browser.localeGeo}\\", 0, null, 48]"]]]'
+        headers = {"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"}
+
+        logging.debug(f"Sending POST request to {url}")
+        try:
+            response = session.post(url, headers=headers, data=payload)
+            response.raise_for_status()
+            logging.debug("Response received from Google Trends API")
+        except requests.RequestException as e:
+            logging.error(f"Error fetching Google Trends: {e}")
+            return []
+
+        trends_data = self.extract_json_from_response(response.text)
+        if not trends_data:
+            logging.error("Failed to extract JSON from Google Trends response")
+            return []
+
+        logging.debug("JSON successfully extracted. Processing root terms...")
+
+        # Process only the first element in each item
+        root_terms = []
+        for item in trends_data:
             try:
-                r = requests.get(url)
-                r.raise_for_status()
-                logging.debug(f"Raw response from Google Trends API:\n{r.text}")
+                topic = item[0]
+                root_terms.append(topic)
+            except Exception as e:
+                logging.warning(f"Error processing an item: {e}")
+                continue
 
-                trends = json.loads(r.text)
-                searchTerms.extend([topic["title"]["query"].lower() for topic in trends["default"]["trendingSearchesDays"][0]["trendingSearches"]])
-                for topic in trends["default"]["trendingSearchesDays"][0]["trendingSearches"]:
-                    searchTerms.extend(
-                        [relatedTopic["query"].lower() for relatedTopic in topic["relatedQueries"]]
-                    )
+        logging.debug(f"Extracted {len(root_terms)} root trend entries")
 
-            except requests.exceptions.RequestException as e:
-                logging.error(f"Error during request to Google Trends API: {e}")
-                return []
-            except json.JSONDecodeError as e:
-                logging.error(f"Error decoding JSON from Google Trends API: {e}. Response text:\n{r.text}")
-                return []
+        # Convert to lowercase and remove duplicates
+        search_terms = list(set(term.lower() for term in root_terms))
+        logging.debug(f"Found {len(search_terms)} unique search terms")
 
-        searchTerms = list(set(searchTerms))
-        del searchTerms[wordsCount : (len(searchTerms) + 1)]
-        return searchTerms
+        if words_count < len(search_terms):
+            logging.debug(f"Limiting search terms to {words_count} items")
+            search_terms = search_terms[:words_count]
+
+        logging.debug("Google Trends fetch complete")
+        return search_terms
+
+    def extract_json_from_response(self, text: str):
+        """
+        Extracts the nested JSON object from the API response.
+        """
+        logging.debug("Extracting JSON from API response")
+        for line in text.splitlines():
+            trimmed = line.strip()
+            if trimmed.startswith('[') and trimmed.endswith(']'):
+                try:
+                    intermediate = json.loads(trimmed)
+                    data = json.loads(intermediate[0][2])
+                    logging.debug("JSON extraction successful")
+                    return data[1]
+                except Exception as e:
+                    logging.warning(f"Error parsing JSON: {e}")
+                    continue
+        logging.error("No valid JSON found in response")
+        return None
 
     def getRelatedTerms(self, word: str) -> list:
         try:

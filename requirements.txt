@@ -6,3 +6,4 @@ selenium-wire
 psutil~=5.9.6
 setuptools
 blinker~=1.7.0
+beautifulsoup4
